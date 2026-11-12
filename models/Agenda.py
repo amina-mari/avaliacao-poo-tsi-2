@@ -17,14 +17,14 @@ class Agenda():
         return sum([atendimento.duracao_minutos() for atendimento in self.atendimentos])
 
     def agendar(self, atendimento: Atendimento):
+        for at in self.atendimentos:
+            if(at.paciente == atendimento.paciente):
+                raise PacienteJaAgendadoError(f"O paciente {atendimento.paciente.nome} já está agendado na Agenda para este atendimento: {at}")
+        
         if (self.minutos_ocupados + atendimento.duracao_minutos() > self.limite_minutos):
             excedimento_horario = self.minutos_ocupados + atendimento.duracao_minutos() - self.limite_minutos
             raise HorarioIndisponivelError(f"O atendimento excede o horário da agenda em {excedimento_horario} minutos")
-        
-        for at in self.atendimentos:
-            if(at.paciente.nome == atendimento.paciente.nome):
-                raise PacienteJaAgendadoError(f"O paciente {atendimento.paciente.nome} já está agendado na Agenda para este atendimento: {at}")
-        
+               
         lista_atendimentos = list(self._atendimentos)
         lista_atendimentos.append(atendimento)
         self._atendimentos = tuple(lista_atendimentos)
