@@ -2,7 +2,7 @@ from .Atendimento import Atendimento
 from .Paciente import Paciente
 
 class Exame(Atendimento):
-    def __init__(self, paciente: Paciente, tipo: str, jejum: bool = False):
+    def __init__(self, paciente: Paciente, tipo: str, jejum: bool = False) -> None:
         super().__init__(paciente)
         self.tipo = tipo
         self.jejum = jejum

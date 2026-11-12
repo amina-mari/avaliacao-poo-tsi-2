@@ -7,11 +7,11 @@ class Atendimento(ABC):
         self._tipo_atendimento = type(self).__name__
 
     @property
-    def paciente(self):
+    def paciente(self) -> Paciente:
         return self._paciente
 
     @abstractmethod
     def duracao_minutos(self) -> int: ...
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"Tipo de Atendimento: {self._tipo_atendimento} | Paciente: {self.paciente.nome} | Duração do Atendimento: {self.duracao_minutos()}"
