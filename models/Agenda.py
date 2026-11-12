@@ -1,16 +1,15 @@
-from Atendimento import Atendimento
-from Paciente import Paciente
-from exceptions import HorarioIndisponivelError
-from exceptions import PacienteJaAgendadoError
+from .Atendimento import Atendimento
+from .Paciente import Paciente
+from exceptions.HorarioIndisponivelError import HorarioIndisponivelError
+from exceptions.PacienteJaAgendadoError import PacienteJaAgendadoError
 
 class Agenda():
-    limite_minutos = 240
-
-    def __init__(self, atendimentos: list[Atendimentos]): ...
-        self._atendimentos = atendimentos
+    def __init__(self, limite_minutos: int = 240): 
+        self.limite_minutos = limite_minutos
+        self._atendimentos = ()
 
     @property
-    def atendimentos(self) -> list[Atendimentos]:
+    def atendimentos(self) -> list[Atendimento]:
         return self._atendimentos
         
     @property
@@ -18,12 +17,14 @@ class Agenda():
         return sum([atendimento.duracao_minutos() for atendimento in self.atendimentos])
 
     def agendar(self, atendimento: Atendimento):
-        if (self.minutos_ocupados() + atendimento.duracao_minutos() > limite_minutos):
-            excedimento_horario = self.minutos_ocupados() + atendimento.duracao_minutos() - limite_minutos
+        if (self.minutos_ocupados + atendimento.duracao_minutos() > self.limite_minutos):
+            excedimento_horario = self.minutos_ocupados + atendimento.duracao_minutos() - self.limite_minutos
             raise HorarioIndisponivelError(f"O atendimento excede o horário da agenda em {excedimento_horario} minutos")
         
         for at in self.atendimentos:
             if(at.paciente.nome == atendimento.paciente.nome):
                 raise PacienteJaAgendadoError(f"O paciente {atendimento.paciente.nome} já está agendado na Agenda para este atendimento: {at}")
         
-        self._atendimentos.append(atendimento)
+        lista_atendimentos = list(self._atendimentos)
+        lista_atendimentos.append(atendimento)
+        self._atendimentos = tuple(lista_atendimentos)
